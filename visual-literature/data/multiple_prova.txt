@@ -1,0 +1,13 @@
+var testi = [
+
+	{
+	    "author": "Austen",
+	    "text": "Ciao a tutti? Ciao a tutti, belli e brutti, belli belli, belli e brutti, brutti e brutti. Questo è un esperimento sociologico, caspita! Lei non sa chi sono io.\nIl mio gatto si chiama Silvestro, e mi piace molto. È un gatto molto morbido, pacioccone, coccoloso, anche sciscione?"
+	},
+
+	{
+	    "author": "Twain",
+	    "text": "All'arrembaggio, miei prodi! Quando costa questa auto!"
+	},
+
+]
