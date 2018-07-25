@@ -112,3 +112,48 @@ blockquote footer {
 .tools .column .bi-twitter,  .tools .column .bi-linkedin, .tools .column .bi-github {
   color: black;
 }
+
+.navbar-dark {
+  background: #404040;
+}
+
+#header-parallax-image {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+}
+
+.section-css-parallax {
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+#intro-section {
+  position: relative;
+}
+
+#intro-section h1 {
+  padding-top: 20rem;
+  font-weight: 600;
+}
+
+#intro-section.no-content {
+  min-height: 450px;
+}
+
+.top-bar-dark {
+  position: relative;
+}
+
+@media screen and (max-width: 991px) {
+  .section-css-parallax {
+    background-attachment: scroll;
+    background-size: cover;
+  }
+  #intro-section h1 {
+    padding-top: 16rem;
+  }
+}
