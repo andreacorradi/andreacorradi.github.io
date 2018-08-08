@@ -1,0 +1,656 @@
+<html>
+<meta charset="utf-8">
+    
+<head>
+    <script src="d3.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,300,800' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <style>
+        
+        body {
+            background-color: #fffff9;
+        }
+        
+        #bubbles {
+            width: 1200px;
+            display: block;
+            margin: auto;
+        }
+    
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin-top: 20px;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            line-height: 16px;
+        }
+        
+        #chart p {
+            margin: 0;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            line-height: 16px;
+        }
+
+        #title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 48px;
+            font-weight: 300;
+            color: black;
+            width: 60%;
+            margin: auto;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        
+        #intro{
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            line-height:24px;
+            color: black;
+            width: 60%;
+            margin: auto;
+            text-align: center;
+            margin-top: 20px;
+            padding-bottom: 10px;
+            
+        }
+        
+        .store-title {
+            fill: #000000;
+            stroke: none;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: underline;
+        }
+        
+        button {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: 14px;
+            color: #eee;
+            background-color: #999;
+            padding: 10 16;
+            margin: 6px;
+            border: none;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+        }
+        
+        button: hover {
+            background-color: #666;
+        }
+        
+        p.label-values {
+            font-size: 30px !important;
+            font-weight: 700;
+            padding-top:10px;
+        }
+        
+        p.intro-text {
+            padding-bottom:30px;
+        }
+
+        button.selected {
+            background-color: #333;
+        }
+
+        button:focus {
+          outline: none;
+        }
+        
+    </style>
+    
+</head>
+    
+<body>
+    
+    <div id="title">The Dimar galaxy</div>
+    
+    <div id="intro">
+        <p class="intro-text"><b>VALUES stage</b>: circle size &prop; normalized quantities sold.<br><b>DIFFERENCES stage</b>: circle size &prop; sales in one store - overall average.</p>
+        
+        <p>
+            <button id="valori" class="selected">values</button>
+            <button id="differenze">differences</button>
+        </p>
+        
+    </div>
+    
+    <div id="bubbles"><svg></svg></div>
+    
+    <div id="tooltip" class="hidden">
+        <p><span id="group" style="font-weight: 400; font-size: 12px; border-bottom:1px solid black"></span></p>
+        <p><span id="family" style="font-weight: 700; font-size: 16px; line-height: 22px"></span></p>
+        <p class="label-values"><span id="value"></span></p>
+        <p><span id="chart"><svg class="svgchart" height=50></svg></span></p>
+    </div>
+    
+    
+<script>
+
+var width = 1200,
+    height = 1200,
+    padding = 1.5, // separation between same-color nodes
+    clusterPadding = 32, // separation between different-color nodes
+    maxRadius = 12;
+
+var colorAv = "#ccc";
+var colorAb = "#2b8cbe";
+var colorBe = "#e34a33";
+    
+var gWidth = 600;
+var gHeight = 400;
+        
+var rThreshold = 9.0;
+    
+
+    
+var update = function(group, nodes, clusters, mode, color){
+        
+    //Use the pack layout to initialize node positions.
+    d3.layout.pack()
+        .sort(function(a, b){
+            return d3.ascending(a.quantity_normalised, b.quantity_normalised)
+        })
+        .size([gWidth, gHeight])
+        .children(function(d) { return d.values; })
+        .value(function(d) { return d.radius * d.radius; })
+        .nodes({values: d3.nest()
+          .key(function(d) { return d.cluster; })
+          .entries(nodes)});
+    
+        force = d3.layout.force()
+            .nodes(nodes)
+            .size([gWidth, gHeight])
+            .gravity(.05) //.02
+            .charge(0)
+            .on("tick", tick)
+            .start();
+        
+    var node = group.selectAll("circle")
+        .data(nodes)
+    
+    var newnode = node
+      .enter().append("circle")
+        //.style("fill", function(d) { return color(d.cluster); })
+        .attr("class", function(d) {
+            return ("c"+d.newfam + " group"+group[0][0].id);
+        })
+        .style("fill", function(d) {
+            if (mode == "diff"){
+                if (d.sign) {
+                    return colorAb;
+                } else { return colorBe };
+            } else { return color(d.cluster); }
+        })
+        .style("fill-opacity", function(d) {
+            if (Math.abs(d.radius) > rThreshold) {
+                return 0.99;
+            } else { return 0.2; }
+        })
+        .call(force.drag);
+
+    node.transition()
+        .duration(750)
+        .delay(function(d, i) { return i * 5; })
+        .attr('r', function(d){
+            return d.radius;
+        })
+        .style("fill", function(d) {
+            if (mode == "diff"){
+                if (d.sign) {
+                    return colorAb;
+                } else { return colorBe };
+            } else { return color(d.cluster); }
+        })
+        .style("fill-opacity", function(d) {
+            if (Math.abs(d.radius) > rThreshold) {
+                return 0.99;
+            } else { return 0.2; }
+        });
+    
+    newnode.transition()
+        .duration(750)
+        .delay(function(d, i) { return i * 5; })
+        .attr('r', function(d){
+            return d.radius;
+        })
+        .style("fill", function(d) {
+            if (mode == "diff"){
+                if (d.sign) {
+                    return colorAb;
+                } else { return colorBe };
+            } else { return color(d.cluster); }
+        })
+        .style("fill-opacity", function(d) {
+            if (Math.abs(d.radius) > rThreshold) {
+                return 0.99;
+            } else { return 0.2; }
+        });
+    
+    node.exit().remove();
+
+    function tick(e) {
+      node
+          .each(cluster(10 * e.alpha * e.alpha))
+          .each(collide(.5))
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+    }
+    
+    node.on("mouseover", function(d) {
+        
+        //Get this bar's x/y values, then augment for the tooltip
+        var circleElement = d3.select(this)[0][0]; //using it to check the group number
+        var rOffset = parseFloat(d3.select(this).attr("r")) + 15;
+        var yAdjust = 185; //compensates the height og the header
+        var xAdjust = ($(window).width() - width)/2;
+                
+        if (circleElement.classList.contains("group2")) {
+            var xTooltipOffset = gWidth + rOffset;
+            var yTooltipOffset = rOffset;
+        } else if (circleElement.classList.contains("group3")) {
+            var xTooltipOffset = rOffset;
+            var yTooltipOffset = gHeight + rOffset;
+        } else if (circleElement.classList.contains("group4")) {
+            var xTooltipOffset = gWidth + rOffset;
+            var yTooltipOffset = gHeight + rOffset;
+        } else {
+            var xTooltipOffset = rOffset;
+            var yTooltipOffset = rOffset; 
+        }
+        
+        var rOffset = parseFloat(d3.select(this).attr("r")) / 2;
+        var xPosition = parseFloat(d3.select(this).attr("cx")) + xTooltipOffset + xAdjust;
+        var yPosition = parseFloat(d3.select(this).attr("cy")) + yTooltipOffset + yAdjust;
+        
+        //Highight same family in other groups        
+        var circleClass = ".c"+d.newfam;        
+        d3.selectAll("circle:not("+circleClass+")")
+            .style("fill-opacity", 0.1);
+        d3.selectAll(circleClass)
+            .style("fill-opacity", .99);
+                
+        //Update the tooltip position and value
+        var box = d3.select("#tooltip")
+            .style("left", xPosition + "px")
+            .style("top", yPosition + "px");
+
+        box
+            .select("#group")
+            .text((d.repdesc).toUpperCase())
+
+        box
+            .select("#family")
+            .text((d.famdesc).toLowerCase());
+        
+        box
+            .select("#value")
+            .text(function(){
+                if (mode == "abs") {
+                    return ((+d.quantity_normalised*100).toFixed(2) + " %");
+                } else {
+                    if (d.sign){
+                        return ("+"+((+d.quantity_normalised - +d.quantity_total_normalised)*100).toFixed(2) + " %");
+                    } else return (((+d.quantity_normalised - +d.quantity_total_normalised)*100).toFixed(2) + " %");
+                }
+            })
+        
+        //Generating data to populate the label bar charts
+        var shopComp = d3.selectAll("circle"+circleClass);
+        var barComp = [];
+        shopComp.each(function(d){
+            if (mode == "abs") {
+                barComp.push({shopName: d.retailstoreid, shopValue: +d.quantity_normalised*1000});
+            } else {
+                barComp.push({shopName: d.retailstoreid, shopValue: (+d.quantity_normalised - +d.quantity_total_normalised)*2400});
+            }
+        })
+        
+//        barComp.forEach(function(e){
+//            console.log(e.shopValue);
+//        })
+                
+        maxComp = d3.max(barComp, function(e){
+            return Math.abs(e.shopValue);
+        })
+        
+        var scaleComp = d3.scale.linear()
+            .domain([0, maxComp])
+            
+        if (mode == 'abs') {
+            scaleComp.range([ 0, 160]);
+        }
+        else {
+            scaleComp.range([ 0, 80]);
+        }
+
+        box
+            .select("#chart").select(".svgchart")
+            .selectAll("text")
+            .data(barComp)
+            .enter()
+            .append("text")
+            .attr("x", 0)
+            .attr("y", function(e, i){
+                return 10 + 12 * i;
+            })
+            .text(function(e){
+                return e.shopName;      
+            });
+        
+        box
+            .select("#chart").select(".svgchart")
+            .selectAll("rect")
+            .data(barComp)
+            .enter()
+            .append("rect")
+            .attr("width", 0)
+            .attr("x", function(e){
+                if (mode == 'diff') {
+                    return 110 }
+                else {
+                    return 30 }
+            })
+            .transition()
+            .duration(1000)
+            .attr("width", function(e){
+                return Math.abs(scaleComp(e.shopValue));
+            })
+            .attr("height", 5)
+            .attr("x", function(e){
+                if (mode == "diff"){       
+                    if (e.shopValue < 0) {
+                        return 110+scaleComp(e.shopValue) }
+                    else {
+                        return 110 }
+                }
+                else {return 30}
+            })
+            .attr("y", function(e, i){
+                return 4 + 12 * i;
+            })
+            .style("fill", function(e){
+                if (mode == "abs"){
+                    return "black";
+                } else {
+                    if (e.shopValue > 0) {
+                        return colorAb;
+                    } else { return colorBe };
+                }
+            })
+
+        //Show the tooltip
+        d3.select("#tooltip").classed("hidden", false);
+
+    })
+
+    node.on("mouseout", function(d) {
+        d3.select("#tooltip").classed("hidden", true);
+        
+//        var circleClass = ".c"+d.newfam;
+//        d3.selectAll("circle:not("+circleClass+")")
+//            .style("fill-opacity", function(d) {
+//                if (d.radius > rThreshold) {
+//                    return .99;
+//                } else { return 0.2; }
+//            })
+//        d3.selectAll("circle"+circleClass)
+//            .style("fill-opacity", 0.2);
+        
+        var circleClass = ".c"+d.newfam;
+        d3.selectAll("circle")
+            .style("fill-opacity", function(d) {
+                if (d.radius > rThreshold) {
+                    return .99;
+                } else { return 0.2; }
+            })
+        
+        //Remove rectangles of the label bar chart
+        d3.selectAll("rect").remove();
+    })
+    
+    
+
+    // Move d to be adjacent to the cluster node.
+    function cluster(alpha) {
+      return function(d) {
+        var cluster = clusters[d.cluster];
+        if (cluster === d) return;
+        var x = d.x - cluster.x,
+            y = d.y - cluster.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + cluster.radius;
+        if (l != r) {
+          l = (l - r) / l * alpha;
+          d.x -= x *= l;
+          d.y -= y *= l;
+          cluster.x += x;
+          cluster.y += y;
+        }
+      };
+    }
+
+    // Resolves collisions between d and all other circles.
+    function collide(alpha) {
+      var quadtree = d3.geom.quadtree(nodes);
+      return function(d) {
+        var r = d.radius + maxRadius + Math.max(padding, clusterPadding),
+            nx1 = d.x - r,
+            nx2 = d.x + r,
+            ny1 = d.y - r,
+            ny2 = d.y + r;
+        quadtree.visit(function(quad, x1, y1, x2, y2) {
+          if (quad.point && (quad.point !== d)) {
+            var x = d.x - quad.point.x,
+                y = d.y - quad.point.y,
+                l = Math.sqrt(x * x + y * y),
+                r = d.radius + quad.point.radius + (d.cluster === quad.point.cluster ? padding : clusterPadding);
+            if (l < r) {
+              l = (l - r) / l * alpha;
+              d.x -= x *= l;
+              d.y -= y *= l;
+              quad.point.x += x;
+              quad.point.y += y;
+            }
+          }
+          return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+        });
+      };
+    }
+
+}
+ 
+
+
+var xTitleOffset = 20;
+var yTitleOffset = 30;
+
+var svg = d3.select("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var group1 = svg.append("g")
+    .attr("id", 1)
+    .attr("width", gWidth)
+    .attr("height", gHeight)
+    .attr("transform", "translate(" + 0 + "," + 0 + ")");
+    
+group1.append("text")
+    .attr("x", xTitleOffset)
+    .attr("y", yTitleOffset)
+    .attr("class", "store-title")
+    .text("Shop 115");
+
+var group2 = svg.append("g")
+    .attr("id", 2)
+    .attr("width", gWidth)
+    .attr("height", gHeight)
+    .attr("transform", "translate(" + gWidth + "," + 0 + ")");
+    
+group2.append("text")
+    .attr("x", xTitleOffset)
+    .attr("y", yTitleOffset)
+    .attr("class", "store-title")
+    .text("Shop 210");
+    
+var group3 = svg.append("g")
+    .attr("id", 3)
+    .attr("width", gWidth)
+    .attr("height", gHeight)
+    .attr("transform", "translate(" + 0 + "," + gHeight + ")");
+    
+group3.append("text")
+    .attr("x", xTitleOffset)
+    .attr("y", yTitleOffset)
+    .attr("class", "store-title")
+    .text("Shop 211");
+
+var group4 = svg.append("g")
+    .attr("id", 4)
+    .attr("width", gWidth)
+    .attr("height", gHeight)
+    .attr("transform", "translate(" + gWidth + "," + gHeight + ")");
+    
+group4.append("text")
+    .attr("x", xTitleOffset)
+    .attr("y", yTitleOffset)
+    .attr("class", "store-title")
+    .text("Shop 220");
+    
+    
+
+(function() {
+    
+    d3.csv('all_total_newid.csv', function(dataset){  
+    
+        var stores = d3.nest()
+            .key(function(d){
+                return d.retailstoreid;
+            })
+            .entries(dataset)
+        
+        //Sorting each shop by repdesc in order to have an homogeneous color/cluster association
+        stores.forEach(function(c){
+            c.values.sort(function(a, b){
+                return d3.ascending(a.repdesc, b.repdesc)
+            })
+        })
+        
+        var store115 = stores[0].values;
+        var store210 = stores[1].values;
+        var store211 = stores[2].values;
+        var store220 = stores[3].values;
+        
+        generate(group1, store115, "abs");
+        generate(group2, store210, "abs");
+        generate(group3, store211, "abs");
+        generate(group4, store220, "abs");
+        
+        d3.select("#valori").on("click", function(){
+            generate(group1, store115, "abs");
+            generate(group2, store210, "abs");
+            generate(group3, store211, "abs");
+            generate(group4, store220, "abs");
+            if (!$(this).hasClass("selected")){
+                $(this).toggleClass("selected");
+                $("#differenze").toggleClass("selected");
+            }
+        })
+        
+        d3.select("#differenze").on("click", function(){
+            generate(group1, store115, "diff");
+            generate(group2, store210, "diff");
+            generate(group3, store211, "diff");
+            generate(group4, store220, "diff");
+            if (!$(this).hasClass("selected")){
+                $(this).toggleClass("selected");
+                $("#valori").toggleClass("selected");
+            }
+        })
+        
+    })
+    
+})()
+
+
+    
+var generate = (function(group, store, mode) {
+        
+    //list with all the possible repdesc values (string)
+    var reps = d3.set(store.map(function(c){
+        return c.repdesc;
+    })).values();
+    
+    var m = reps.length; // number of distinct clusters
+    var n = store.length; // total number of nodes
+
+    //map each repdesc (string) as number. This number is the cluster_ID 
+    cluster_num = d3.scale.ordinal()
+        .domain(reps)
+        .range(d3.range(m));
+
+    // cluster list. Each element is set to 0.    
+    var clusters = d3.range(m).map(function(){
+        return {radius: 0};
+    })
+
+    store.forEach(function(c){
+        if (mode == "diff"){
+            c.radius = Math.sqrt(Math.abs( +c.quantity_normalised - +c.quantity_total_normalised));
+            c.sign = ( +c.quantity_normalised > +c.quantity_total_normalised ) ? true : false;
+        } else if (mode == "abs"){
+            c.radius = Math.sqrt(+c.quantity_normalised/3);
+        }
+        c.cluster = cluster_num(c.repdesc);
+        // store the largest famdesc radius for each element of the cluster list
+        if (c.radius > clusters[c.cluster].radius) clusters[c.cluster] = c;        
+    });
+
+    var circleScale = d3.scale.linear()
+        .domain([0, 1.5])
+        .range([0, width/4]);
+
+//    clusters.forEach(function(c){
+//        d.radius = circleScale(d.radius);      
+//    });
+
+    store.forEach(function(c){
+        c.radius = circleScale(c.radius);      
+    });
+    
+    var color = d3.scale.ordinal()
+      .domain(reps)
+      .range(["#FFE600", "#33A02C", "#FB898C", "#AC7CDE", "#6A3D9A", "#E31A1C", "#1F78B4", "#4CC3E6", "#B15928", "#FFB500", "#FF7F00", "#41C899"]);
+                
+    update(group, store, clusters, mode, color);
+
+})
+
+</script>
+</body>
+</html>
