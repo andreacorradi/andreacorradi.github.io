@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Alps explorer</title>
+		<link rel="stylesheet" type="text/css" href="css/reset.css">
+		<link rel="stylesheet" type="text/css" href="components/peakchart/peakchart.css">
+		<link rel="stylesheet" type="text/css" href="components/peakinfo/peakinfo.css">
+		<link rel="stylesheet" type="text/css" href="components/scrollytelling/scrollytelling.css">
+		<link rel="stylesheet" type="text/css" href="components/ui/ui.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+
+	<body>
+
+		<div class="layer" id="chart" process="components/peakchart/_peakchart.html" process-keep></div>
+		<div class="layer" id="ui" process="components/ui/_ui.html" process-keep></div>
+		<div class="layer" id="scrollytelling" process="components/scrollytelling/_scrollytelling.html" process-keep></div>
+		<div class="layer" id="peakinfo" process="components/peakinfo/_peakinfo.html" process-keep></div>
+		<div class="layer" id="peakinfo-ui" process="components/peakinfo/_peakinfo-ui.html" process-keep></div>
+		
+		<script src="node_modules/d3/dist/d3.min.js"></script>
+		<script src="node_modules/topojson/dist/topojson.min.js"></script>
+		<script src="node_modules/jquery/dist/jquery.js"></script>
+	  <script src="node_modules/lodash/lodash.js"></script>
+	  <script src="node_modules/intersection-observer/intersection-observer.js"></script>
+	  <script src="node_modules/scrollama/build/scrollama.min.js"></script>
+	  <!-- <script src="node_modules/stateman/stateman.js"></script>
+	  <script src="node_modules/gsap/src/minified/TweenMax.min.js"></script>
+	  <script src="node_modules/es6-promise/dist/es6-promise.js"></script>
+	  <script src="node_modules/es6-promise/dist/es6-promise.auto.js"></script> -->
+
+	  <script type="text/javascript" src="components/data/data.js"></script>
+	  <script type="text/javascript" src="components/peakchart/peakchart.js"></script>
+	  <script type="text/javascript" src="components/peakinfo/peakinfo.js"></script>
+	  <script type="text/javascript" src="components/scrollytelling/scrollytelling.js"></script>
+	  <script type="text/javascript" src="components/ui/ui.js"></script>
+	  <script type="text/javascript" src="js/highlight.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+
+		<script src="node_modules/static-player/static-player.js"></script>
+	  <script type="text/javascript">
+	  window.StaticPlayer.getInstance().begin()
+	  </script>
+
+	</body>
+</html>

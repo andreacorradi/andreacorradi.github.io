@@ -1,0 +1,99 @@
+#peakinfo {
+	color: #fff;
+	padding: 1rem;
+	padding-top: 3rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#info-header {
+	width: 100%;
+	margin-top: 1rem;
+	height: 6rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.info-header {
+	width: 100%;
+	text-align: center;
+}
+#info-close {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 2rem;
+}
+#icon-close {
+	width: 1.4rem;
+	height: 1.4rem;
+	stroke:white;
+}
+#info-header .info-title {
+	font-size: 1.4rem;
+}
+#info-header .info-country {
+	font-size: 1rem;
+}
+#info-header .info-range {
+	font-size: 1rem;
+}
+
+#info-map {
+	margin-top: 1rem;
+	width: 100%;
+	height: 14rem;
+	/*border: 1px solid white;*/
+}
+#zoom-map-button {
+	margin-top: 1.4rem;
+	width: 100%;
+	height: 2rem;
+	display: flex;
+	justify-content: center;
+}
+#zoom-map {
+	background: white;
+	padding: 0.5rem;
+	width: auto;
+	height: 2rem;
+	line-height: 1rem;
+	font-size: 1rem;
+	border-radius: 0.5rem;
+}
+circle {
+	fill: white;
+	fill-opacity: 0.5;
+}
+circle.selected {
+	fill: white;
+	fill-opacity: 1;
+}
+
+#info-detail {
+	width: 100%;
+}
+
+.info-detail {
+	margin-top: 3rem;
+}
+.detail-title {
+	margin-bottom: 0.5rem;
+}
+.info-geo {
+	display: flex;
+}
+.detail-chart {
+	height: 2rem;
+}
+.detail-dida {
+	margin-top: 0.5rem;
+	font-size: 0.7rem;
+}
+
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  
+}

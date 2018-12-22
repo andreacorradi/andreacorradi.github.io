@@ -1,0 +1,20 @@
+#scroll-container {
+	position: relative;
+	width: 100%;
+	height: auto;
+	position: relative;
+	overflow-y: scroll;
+}
+.tour-caption {
+	display: block;
+	width: 70%;
+	margin: 0 auto;
+	height: 6rem;
+	margin-top: 100vh;
+	padding: 1rem;
+	background: lightgrey;
+	opacity: 0.5;
+}
+.tour-caption:last-child {
+	margin-bottom: 100vh;
+}
