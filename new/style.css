@@ -487,6 +487,16 @@ Primary use:	Showcase Portfolio
 		line-height:28px;
 		color:#999;
 	}
+
+	p.dida {
+		padding-top: 4rem;
+	}
+	.one_half > p.dida {
+		padding-left: 6rem;
+	}
+	.one_half.last > p.dida {
+		padding-right: 6rem;
+	}
 	
 	p.no-margins {
 		margin-bottom:0;
@@ -616,7 +626,7 @@ Primary use:	Showcase Portfolio
 	
 	.one_half {
 		float: left;
-		margin-bottom: 20px;
+		/*margin-bottom: 20px;*/
 		margin-right: 6%;
 		position: relative;
 	}
@@ -1868,6 +1878,26 @@ Primary use:	Showcase Portfolio
 		height:16px;
 		top: 18px;
 	}
+
+	.separator {
+		max-width: 900px;
+    width: 10%;
+    /*padding: 0 50px;*/
+    /*background: none repeat scroll 0 0 #ccc;*/
+    margin: 0 auto;
+    box-sizing: border-box;
+    height: 4px;
+    display: flex;
+    justify-content: space-around;
+	}
+
+	.separator .separator-dot {
+		width: 4px;
+		height: 4px;
+		border-radius: 100%;
+		background: #333;
+	}
+
 		
 /*--------------------------------------------------
 	08. Responsive
@@ -2182,13 +2212,25 @@ Primary use:	Showcase Portfolio
 	}	
 
 	.one_half, .one_third, .two_third, .three_fourth, .one_fourth, .two_fourth, .one_fifth, .two_fifth, .three_fifth, .four_fifth, .one_sixth, .five_sixth {
-		margin-bottom: 20px;
+		/*margin-bottom: 20px;*/
 		margin-right: 0%;
 	}
 	
 	.socials-text li {
 		display:table;
 		margin:0 auto!important;
+	}
+
+	.one_half > p.dida {
+		padding-left: 0rem;
+	}
+
+	.one_half.last > p.dida {
+		padding-right: 0rem;
+	}
+
+	.one_half:not(.last) {
+		margin-bottom: 38px;
 	}
 	
 }

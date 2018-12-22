@@ -164,7 +164,8 @@
 		-webkit-flex: 0 0 50%;
 		-ms-flex: 0 0 50%;
 		flex: 0 0 50%;
-		max-width: 50%;
+		/*max-width: 50%;*/
+		max-width: 70%;
 	}
 	
 	.item.in-view .item-content {
@@ -206,7 +207,8 @@
 	}
 	
 	.item:nth-of-type(4n+3) .item-content.large {
-		margin-left:50%;
+		/*margin-left:50%;*/
+		margin-left:30%;
 	}
 	
 	.item-content a {
@@ -216,6 +218,7 @@
 		display: block;
 		box-sizing: border-box;
 		overflow:hidden;
+		/*box-shadow: 5px 5px 10px rgba(200, 200, 200, 0.5);*/
 	}
 	
 	.item-content img {
@@ -255,14 +258,14 @@
 		margin-left:-1px;
 	}
 	
-	.item:first-child .item-title::after {
-		content: "New";
+	.item .item-title.case-study::after {
+		content: "CASE STUDY";
 		font-family: 'Roboto', sans-serif;
 		font-size: 10px;
 		position: absolute;
 		font-weight: 400;
 		margin-left: 10px;
-		color: #FF1B0B;
+		color: royalblue;
 	}
 	
 	.item-sub-mask {
