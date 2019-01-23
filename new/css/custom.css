@@ -5,3 +5,7 @@ p.text-big {
 	margin-bottom: 4rem;
 	/*text-align: center;*/
 }
+
+span.white-strong {
+	color: rgba(255, 255, 255, 1);
+}
