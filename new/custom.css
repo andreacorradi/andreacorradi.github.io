@@ -14,11 +14,21 @@ span.white-strong {
 	height: 30px;
 }
 
-/*@media only screen and (max-width: 767px) {*/
+@media only screen and (max-width: 767px) {
 
 	h4.dida {
 		font-size: 16px;
 		line-height: 24px;
 	}
 
-/*}*/
+	.hero-subtitle {
+		line-height: 10px;
+		margin-bottom: 20px;
+	}
+
+	.hero-subtitle span {
+		line-height: 25px;
+		height: 25px;
+	}
+
+}
