@@ -35,7 +35,7 @@ function Data() {
 	}
 
 	self.init = function() {
-		d3.csv("./../data/mountains.csv", (m) => {
+		d3.csv("data/mountains.csv", (m) => {
 			return {
 				rank: +m.Rank,
 				mountain: m.Mountain,
