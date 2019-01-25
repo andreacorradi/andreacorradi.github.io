@@ -13,6 +13,60 @@ span.white-strong {
 #logo img {
 	height: 30px;
 }
+	
+#logo span {
+	display: block;
+	height: 40px;
+	width: auto;
+	-webkit-transition: opacity 0.2s ease-in-out;
+	-moz-transition: opacity 0.2s ease-in-out;
+	-o-transition: opacity 0.2s ease-in-out;
+	-ms-transition: opacity 0.2s ease-in-out;
+	transition: opacity 0.2s ease-in-out;
+	font-family: 'Poppins', sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 20px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+}
+
+#logo span.black-logo {
+	opacity:1;
+}
+
+.light-content #logo span.black-logo {
+	opacity:0;
+}
+
+.menu-open.light-content #logo span.black-logo, .initial.light-content #logo span.black-logo {
+	opacity:1;
+}
+
+
+.menu-open.light-content .slide-in #logo span.black-logo {
+	opacity:0;
+}
+
+#logo span.white-logo {
+	position:absolute;
+	top:0;
+	left:0;
+	opacity:0;
+	color: white;
+}
+
+.light-content #logo span.white-logo {
+	opacity:1;
+}
+
+.menu-open.light-content #logo span.white-logo, .initial.light-content #logo span.white-logo {
+	opacity:0;
+}
+
+.menu-open.light-content .slide-in #logo span.white-logo {
+	opacity:1;
+}
 
 @media only screen and (max-width: 767px) {
 
