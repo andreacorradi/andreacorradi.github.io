@@ -164,7 +164,7 @@
 		-webkit-flex: 0 0 50%;
 		-ms-flex: 0 0 50%;
 		flex: 0 0 50%;
-		max-width: 50%;
+		max-width: 70%;
 	}
 	
 	.item.in-view .item-content {
@@ -206,7 +206,7 @@
 	}
 	
 	.item:nth-of-type(4n+3) .item-content.large {
-		margin-left:50%;
+		margin-left:30%;
 	}
 	
 	.item-content a {
@@ -262,7 +262,7 @@
 		position: absolute;
 		font-weight: 400;
 		margin-left: 10px;
-		color: #3240ff;
+		color: royalblue;
 	}
 	
 	.item-sub-mask {
