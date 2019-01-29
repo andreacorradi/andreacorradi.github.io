@@ -255,14 +255,14 @@
 		margin-left:-1px;
 	}
 	
-	.item:first-child .item-title::after {
-		content: "New";
+	.item.case-study .item-title::after {
+		content: "CASE STUDY";
 		font-family: 'Roboto', sans-serif;
 		font-size: 10px;
 		position: absolute;
 		font-weight: 400;
 		margin-left: 10px;
-		color: #FF1B0B;
+		color: #3240ff;
 	}
 	
 	.item-sub-mask {
