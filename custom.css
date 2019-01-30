@@ -10,6 +10,10 @@ span.white-strong {
 	color: rgba(255, 255, 255, 1);
 }
 
+.hero-title {
+  max-width: 680px;
+}
+
 #logo img {
 	height: 30px;
 }
