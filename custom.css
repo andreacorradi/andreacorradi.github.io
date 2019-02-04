@@ -103,7 +103,7 @@ span.white-strong {
 
 .process-line.open {
 	height: 6rem;
-	transition: height .5s ease-in-out;
+	transition: height .25s ease-in-out;
 }
 
 @media only screen and (max-width: 767px) {
