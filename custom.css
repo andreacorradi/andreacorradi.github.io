@@ -82,6 +82,30 @@ span.white-strong {
   margin-bottom: 40px;
 }
 
+.process-intro p {
+	width: 66%;
+	margin-bottom: 10rem;
+	color: #999;
+	font-family: Roboto, sans-serif;
+	font-size: 22px;
+	line-height: 36px;
+}
+
+.process-intro p:first-child {
+	color: white;
+	margin-bottom: 2rem;
+}
+
+.process-line {
+	height: 0rem;
+	border-left: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.process-line.open {
+	height: 6rem;
+	transition: height .5s ease-in-out;
+}
+
 @media only screen and (max-width: 767px) {
 
 	h4.dida {
@@ -103,10 +127,8 @@ span.white-strong {
     width: 100%;
 	}
 
-}
+	.process-intro p {
+		width: 100%;
+	}
 
-
-@media only screen and (max-width: 767px)
-.one_third {
-    width: 100%;
 }
